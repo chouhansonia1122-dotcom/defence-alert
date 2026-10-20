@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101b17">
+<meta name="description" content="Defence Alert - Defence news, security updates and military intelligence briefs.">
+<title>Defence Alert | Military News Brief</title>
+
+<style>
+:root {
+  --bg:#0b110f;
+  --panel:#141d19;
+  --panel2:#1b2822;
+  --green:#b6e36a;
+  --text:#f1f5f0;
+  --muted:#a1b0a6;
+  --border:#2b3a31;
+  --red:#ff7777;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.55;
+}
+button,input {font:inherit}
+button {cursor:pointer}
+header {
+  padding:20px 16px;
+  background:#101b17;
+  border-bottom:1px solid var(--border);
+}
+.top {
+  max-width:950px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.logo {
+  width:48px;height:48px;
+  border-radius:14px;
+  display:grid;place-items:center;
+  background:#263b2c;
+  font-size:27px;
+}
+h1 {font-size:22px;margin:0}
+.tagline {font-size:12px;color:var(--muted)}
+.live {
+  margin-left:auto;
+  font-size:11px;
+  color:var(--green);
+  border:1px solid #43583a;
+  border-radius:20px;
+  padding:5px 9px;
+}
+main {max-width:950px;margin:auto;padding:18px 14px 100px}
+.hero {
+  padding:22px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:linear-gradient(135deg,#1b3023,#141d19 75%);
+}
+.eyebrow {
+  color:var(--green);
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:1.5px;
+}
+.hero h2 {font-size:26px;line-height:1.2;margin:9px 0}
+.hero p {color:var(--muted);font-size:14px;margin-bottom:0}
+.search {margin:18px 0}
+.search input {
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:var(--text);
+  outline:none;
+}
+h3.section {font-size:17px;margin:24px 0 12px}
+.categories {
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:2px 0 10px;
+}
+.chip {
+  flex-shrink:0;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:9px 13px;
+  color:var(--text);
+  font-size:12px;
+}
+.chip.active {
+  background:var(--green);
+  color:#172015;
+  border-color:var(--green);
+  font-weight:bold;
+}
+.notice {
+  background:#18231d;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  color:var(--muted);
+  font-size:12px;
+  margin:14px 0;
+}
+.news-card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+  margin:12px 0;
+  padding:16px;
+}
+.news-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.category-label {
+  font-size:11px;
+  color:var(--green);
+  font-weight:bold;
+}
+.status {
+  font-size:10px;
+  padding:4px 8px;
+  border-radius:20px;
+  background:#26352b;
+  color:var(--green);
+}
+.status.developing {
+  color:#ffd27d;
+  background:#392f1e;
+}
+.news-card h4 {font-size:17px;line-height:1.4;margin:12px 0 7px}
+.summary {font-size:13px;color:#c2cdc5}
+.meta {font-size:11px;color:var(--muted);margin:12px 0}
+.details {
+  border-top:1px solid var(--border);
+  margin-top:14px;
+  padding-top:12px;
+}
+details summary {
+  color:var(--green);
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.report-section {margin:15px 0}
+.report-section h5 {margin:0 0 5px;font-size:13px;color:var(--green)}
+.report-section p {margin:0;color:#d0d9d2;font-size:13px;white-space:pre-wrap}
+.source-link {color:var(--green);word-break:break-word}
+.small-btn {
+  background:var(--panel2);
+  color:var(--text);
+  border:1px solid var(--border);
+  padding:9px 12px;
+  border-radius:9px;
+  font-size:12px;
+  margin-top:12px;
+}
+.empty {
+  padding:25px 12px;
+  color:var(--muted);
+  text-align:center;
+  border:1px dashed var(--border);
+  border-radius:12px;
+  font-size:13px;
+}
+footer {
+  position:fixed;
+  bottom:0;left:0;right:0;
+  padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+  display:flex;
+  justify-content:center;
+  background:#101b17f5;
+  border-top:1px solid var(--border);
+  z-index:5;
+}
+.footer-inner {
+  width:100%;max-width:700px;
+  display:flex;justify-content:space-around;gap:5px;
+}
+.nav-btn {
+  background:none;border:0;color:var(--muted);
+  padding:5px;font-size:11px;
+}
+.nav-btn span {display:block;font-size:19px}
+.nav-btn.active {color:var(--green)}
+.hidden {display:none!important}
+@media(min-width:650px) {
+  main {padding-top:26px}
+  .hero {padding:30px}
+  .hero h2 {font-size:32px}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="top">
+    <div class="logo">🛡️</div>
+    <div>
+      <h1>DEFENCE ALERT</h1>
+      <div class="tagline">Military News • Intelligence Brief • Technology</div>
+    </div>
+    <div class="live">● NEWS DESK</div>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="eyebrow">YOUR DAILY DEFENCE BRIEF</div>
+    <h2>Know What Happened.<br>Know the Facts.</h2>
+    <p>Har event ko samjho: Kab, Kahan, Kisne, Kya, Kyun aur Aage Kya?</p>
+  </section>
+
+  <div class="search">
+    <input id="searchInput" type="search"
+      placeholder="Search news, place, force or event..."
+      aria-label="Search news">
+  </div>
+
+  <h3 class="section">News Categories</h3>
+  <div class="categories" id="categories">
+    <button class="chip active" data-category="All">All News</button>
+    <button class="chip" data-category="Indian Army">Indian Army</button>
+    <button class="chip" data-category="J&K Security">J&K Security</button>
+    <button class="chip" data-category="Para SF">Para SF</button>
+    <button class="chip" data-category="World Defence">World Defence</button>
+    <button class="chip" data-category="Exercises">Exercises</button>
+    <button class="chip" data-category="Weapons & Tech">Weapons & Tech</button>
+    <button class="chip" data-category="AI & Cyber">AI & Cyber</button>
+    <button class="chip" data-category="MoD">MoD Updates</button>
+  </div>
+
+  <div class="notice">
+    <strong>Source policy:</strong> Official statements aur reliable news sources ko priority.
+    Confirmed, Developing aur Unverified information ko alag dikhaya jayega.
+  </div>
+
+  <h3 class="section" id="feedTitle">Latest News</h3>
+  <div id="newsFeed"></div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <button class="nav-btn active" data-nav="home"><span>⌂</span>Home</button>
+    <button class="nav-btn" data-nav="J&K Security"><span>🛡️</span>J&K</button>
+    <button class="nav-btn" data-nav="Indian Army"><span>🎖️</span>Army</button>
+    <button class="nav-btn" data-nav="Weapons & Tech"><span>📡</span>Tech</button>
+    <button class="nav-btn" data-nav="AI & Cyber"><span>🤖</span>AI Tips</button>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/*
+  DEFENCE ALERT
+  Initial version: app interface and report template.
+
+  Important:
+  This file does not yet fetch live news automatically.
+  Add a trusted news API/backend before publishing live reports.
+  Never place private API keys in this public HTML file.
+*/
+
+const news = [];
+
+let selectedCategory = "All";
+
+const feed = document.getElementById("newsFeed");
+const searchInput = document.getElementById("searchInput");
+
+function safeText(value) {
+  return String(value ?? "");
+}
+
+function makeSection(label, value) {
+  if (!value) return "";
+  return `
+    <div class="report-section">
+      <h5>${escapeHTML(label)}</h5>
+      <p>${escapeHTML(value)}</p>
+    </div>`;
+}
+
+function escapeHTML(value) {
+  return safeText(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+function renderNews() {
+  const query = searchInput.value.trim().toLowerCase();
+
+  const filtered = news.filter(item => {
+    const matchesCategory =
+      selectedCategory === "All" ||
+      item.category === selectedCategory;
+
+    const text = [
+      item.title, item.summary, item.category,
+      item.location, item.who, item.what
+    ].join(" ").toLowerCase();
+
+    return matchesCategory && text.includes(query);
+  });
+
+  if (!filtered.length) {
+    feed.innerHTML = `
+      <div class="empty">
+        <div style="font-size:28px">📰</div>
+        <strong>News feed abhi connect nahi hai.</strong>
+        <p>App ka design taiyar hai. Live news lane ke liye
+        verified news source/API aur backend connect karna baaki hai.</p>
+        <p>Filhaal kisi bhi sample ya purani news ko current news samajhkar nahi dikhaya jayega.</p>
+      </div>`;
+    return;
+  }
+
+  feed.innerHTML = filtered.map((item, index) => `
+    <article class="news-card">
+      <div class="news-top">
+        <span class="category-label">${escapeHTML(item.category)}</span>
+        <span class="status ${item.status === "Developing" ? "developing" : ""}">
+          ${escapeHTML(item.status)}
+        </span>
+      </div>
+
+      <h4>${escapeHTML(item.title)}</h4>
+      <div class="summary">${escapeHTML(item.summary)}</div>
+      <div class="meta">
+        Published: ${escapeHTML(item.published || "Not provided")}
+        ${item.location ? " • Location: " + escapeHTML(item.location) : ""}
+      </div>
+
+      <div class="details">
+        <details>
+          <summary>Open Full Event Report ↓</summary>
+          ${makeSection("KYA HUA? (What happened)", item.what)}
+          ${makeSection("KAB HUA? (When)", item.when)}
+          ${makeSection("KAHAN HUA? (Where)", item.location)}
+          ${makeSection("KISNE KIYA / BATAYA? (Who)", item.who)}
+          ${makeSection("KYUN HUA? (Why / Background)", item.why)}
+          ${makeSection("AB KYA HO SAKTA HAI? (Analysis)", item.analysis)}
+          ${makeSection("NEXT PLAN (Officially announced)", item.next)}
+          ${makeSection("CONFIRMATION STATUS", item.status)}
+          ${makeSection("ENGLISH MILITARY TERMS", item.terms)}
+          <div class="report-section">
+            <h5>SOURCE</h5>
+            ${item.sourceUrl
+              ? `<a class="source-link" href="${escapeHTML(item.sourceUrl)}" target="_blank" rel="noopener noreferrer">Open original source ↗</a>`
+              : "<p>Source link abhi available nahi hai.</p>"}
+          </div>
+        </details>
+      </div>
+    </article>
+  `).join("");
+}
+
+document.querySelectorAll("[data-category]").forEach(button => {
+  button.addEventListener("click", () => {
+    selectedCategory = button.dataset.category;
+    document.querySelectorAll("[data-category]").forEach(chip => {
+      chip.classList.toggle("active", chip === button);
+    });
+    document.getElementById("feedTitle").textContent =
+      selectedCategory === "All" ? "Latest News" : selectedCategory + " News";
+    renderNews();
+  });
+});
+
+searchInput.addEventListener("input", renderNews);
+
+document.querySelectorAll("[data-nav]").forEach(button => {
+  button.addEventListener("click", () => {
+    const section = button.dataset.nav;
+    document.querySelectorAll("[data-nav]").forEach(nav => {
+      nav.classList.toggle("active", nav === button);
+    });
+
+    if (section === "home") {
+      selectedCategory = "All";
+    } else {
+      selectedCategory = section;
+    }
+
+    document.querySelectorAll("[data-category]").forEach(chip => {
+      chip.classList.toggle("active",
+        chip.dataset.category === selectedCategory);
+    });
+
+    document.getElementById("feedTitle").textContent =
+      selectedCategory === "All" ? "Latest News" : selectedCategory + " News";
+
+    renderNews();
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+});
+
+renderNews();
+</script>
+</body>
+</html>
