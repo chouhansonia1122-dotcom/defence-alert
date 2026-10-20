@@ -416,6 +416,133 @@ document.querySelectorAll("[data-nav]").forEach(button => {
 });
 
 renderNews();
+async function loadPIBNews() {
+  const feedUrl =
+    "https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=1";
+
+  const proxy = "https://proxy.cors.dev/";
+
+  feed.innerHTML =
+    '<div class="empty">Official news feed load ho rahi hai...</div>';
+
+  try {
+    const response = await fetch(proxy + feedUrl, {
+      credentials: "omit"
+    });
+
+    if (!response.ok) {
+      throw new Error("Feed request failed: " + response.status);
+    }
+
+    const xmlText = await response.text();
+    const xml = new DOMParser().parseFromString(
+      xmlText, "application/xml"
+    );
+
+    if (xml.querySelector("parsererror")) {
+      throw new Error("RSS format read nahi hua");
+    }
+
+    const entries = Array.from(xml.querySelectorAll("item"));
+
+    const keywords = [
+      "defence", "defense", "military", "army",
+      "air force", "navy", "missile", "drone",
+      "jammu", "kashmir", "terror", "security",
+      "exercise", "weapon", "ministry of defence",
+      "armed forces", "cyber security", "artificial intelligence"
+    ];
+
+    function getText(entry, selector) {
+      return entry.querySelector(selector)?.textContent?.trim() || "";
+    }
+
+    const items = entries
+      .map(entry => {
+        const title = getText(entry, "title");
+        const description = getText(entry, "description");
+        const link = getText(entry, "link");
+        const date = getText(entry, "pubDate");
+
+        return { title, description, link, date };
+      })
+      .filter(item =>
+        keywords.some(word =>
+          (item.title + " " + item.description)
+            .toLowerCase().includes(word)
+        )
+      )
+      .map(item => {
+        const text = (item.title + " " + item.description)
+          .toLowerCase();
+
+        let category = "MoD";
+
+        if (/jammu|kashmir|terror|infiltration|encounter/.test(text)) {
+          category = "J&K Security";
+        } else if (/para sf|special forces/.test(text)) {
+          category = "Para SF";
+        } else if (/artificial intelligence|\bai\b|cyber security/.test(text)) {
+          category = "AI & Cyber";
+        } else if (/exercise|joint exercise/.test(text)) {
+          category = "Exercises";
+        } else if (/missile|drone|weapon|radar|air defence/.test(text)) {
+          category = "Weapons & Tech";
+        } else if (/indian army|army/.test(text)) {
+          category = "Indian Army";
+        } else if (/international|foreign|world/.test(text)) {
+          category = "World Defence";
+        }
+
+        return {
+          title: item.title,
+          summary: item.description.replace(/<[^>]*>/g, "").trim(),
+          category,
+          published: item.date
+            ? new Date(item.date).toLocaleString("en-IN")
+            : "Date not provided",
+          location: "",
+          what: item.description.replace(/<[^>]*>/g, "").trim(),
+          when: "",
+          who: "",
+          why: "",
+          analysis: "Is RSS entry se future developments confirm nahi hote.",
+          next: "Official source mein alag se announce hua ho to hi confirm karein.",
+          terms: "",
+          status: "Official release",
+          sourceUrl: /^https:\/\/(www\.)?pib\.gov\.in\//i.test(item.link)
+            ? item.link
+            : "https://www.pib.gov.in/"
+        };
+      });
+
+    news.splice(0, news.length, ...items);
+    renderNews();
+
+    if (!items.length) {
+      feed.insertAdjacentHTML(
+        "afterbegin",
+        '<div class="notice">Feed mili, lekin defence keywords se match karne wali news nahi mili.</div>'
+      );
+    }
+  } catch (error) {
+    feed.innerHTML = `
+      <div class="empty">
+        <strong>News feed load nahi hui.</strong>
+        <p>Internet, RSS source ya proxy mein problem ho sakti hai.</p>
+        <p>Dobara try karo ya official PIB website kholo.</p>
+        <button class="small-btn" id="retryNews">Retry</button>
+        <p><a class="source-link" href="https://www.pib.gov.in/ViewRss.aspx?lang=1&reg=1">Official PIB RSS</a></p>
+      </div>`;
+
+    document.getElementById("retryNews")
+      ?.addEventListener("click", loadPIBNews);
+  }
+}
+
+renderNews();
+loadPIBNews();
+
 </script>
 </body>
 </html>
